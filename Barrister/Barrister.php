@@ -11,6 +11,6 @@ class Barrister {
      * @return BarristerClient
      */
     public function httpClient($url) {
-        return new BarristerClient(new BarristerHttpTransport($url));
+        return new BarristerClient(new BarristerHttpTransport($url, new BarristerJsonDecoder()));
     }
 }

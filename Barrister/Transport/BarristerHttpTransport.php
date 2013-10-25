@@ -2,15 +2,28 @@
 
 namespace Barrister\Transport;
 
+use Barrister\BarristerJsonDecoder;
 use Barrister\BarristerTransport;
 use Barrister\Exception\BarristerRpcException;
 
 class BarristerHttpTransport implements BarristerTransport {
     /**
-     * @param string $url
+     * @var
      */
-    public function __construct($url) {
+    public $url;
+
+    /**
+     * @var \Barrister\BarristerJsonDecoder
+     */
+    public $jsonDecoder;
+
+    /**
+     * @param                      $url
+     * @param BarristerJsonDecoder $jsonDecoder
+     */
+    public function __construct($url, BarristerJsonDecoder $jsonDecoder) {
         $this->url = $url;
+        $this->jsonDecoder = $jsonDecoder;
     }
 
     /**
@@ -34,33 +47,8 @@ class BarristerHttpTransport implements BarristerTransport {
         }
         else {
             //print "result: $result\n";
-            $resp = $this->bar_json_decode($result);
+            $resp = $this->jsonDecoder->decode($result);
             return $resp;
-        }
-    }
-
-    private function bar_json_decode($jsonStr) {
-        if ($jsonStr === null || $jsonStr === "null") {
-            return null;
-        }
-
-        $ok  = true;
-        $val = json_decode($jsonStr);
-        if (function_exists('json_last_error')) {
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                $ok = false;
-            }
-        }
-        else if ($val === null) {
-            $ok = false;
-        }
-
-        if ($ok) {
-            return $val;
-        }
-        else {
-            $s = substr($jsonStr, 0, 100);
-            throw new BarristerRpcException(-32700, "Unable to decode JSON. First 100 chars: $s");
         }
     }
 }

@@ -16,16 +16,24 @@ class BarristerServer {
     public $handlers;
 
     /**
-     * @param string $idlFile
+     * @var BarristerJsonDecoder
+     */
+    public $jsonDecoder;
+
+    /**
+     * @param                      $idlFile
+     * @param BarristerJsonDecoder $jsonDecoder
      * @throws \Exception
      */
-    public function __construct($idlFile) {
+    public function __construct($idlFile, BarristerJsonDecoder $jsonDecoder) {
+        $this->jsonDecoder = $jsonDecoder;
+
         if (file_exists($idlFile)) {
             $fh = fopen($idlFile, 'r');
             $data = fread($fh, filesize($idlFile));
             fclose($fh);
 
-            $this->contract = new BarristerContract($this->bar_json_decode($data));
+            $this->contract = new BarristerContract($this->jsonDecoder->decode($data));
             $this->handlers = array();
         }
         else {
@@ -50,7 +58,7 @@ class BarristerServer {
         $resp = null;
         $req  = null;
         try {
-            $req = $this->bar_json_decode($reqJson);
+            $req = $this->jsonDecoder->decode($reqJson);
         }
         catch (BarristerRpcException $e) {
             $resp = $this->errResp($req, $e->getCode(), $e->getMessage());
@@ -185,30 +193,5 @@ class BarristerServer {
             $resp["id"] = $req->id;
         }
         return $resp;
-    }
-
-    private function bar_json_decode($jsonStr) {
-        if ($jsonStr === null || $jsonStr === "null") {
-            return null;
-        }
-
-        $ok  = true;
-        $val = json_decode($jsonStr);
-        if (function_exists('json_last_error')) {
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                $ok = false;
-            }
-        }
-        else if ($val === null) {
-            $ok = false;
-        }
-
-        if ($ok) {
-            return $val;
-        }
-        else {
-            $s = substr($jsonStr, 0, 100);
-            throw new BarristerRpcException(-32700, "Unable to decode JSON. First 100 chars: $s");
-        }
     }
 }

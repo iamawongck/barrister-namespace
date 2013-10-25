@@ -2,7 +2,13 @@
 
 namespace Barrister;
 
-class BarristerClient {
+use Barrister\BarristerClientProxy;
+use Barrister\BarristerContract;
+use Barrister\BarristerTransport;
+use Barrister\BarristerBatch;
+use Barrister\BarristerClientInterface;
+
+class BarristerClient implements BarristerClientInterface {
     /**
      * @var BarristerTransport
      */
@@ -50,11 +56,21 @@ class BarristerClient {
         return new BarristerBatch($this);
     }
 
+    /**
+     * @param string $method
+     * @param array  $params
+     * @return mixed
+     */
     public function request($method, $params) {
         $req = $this->createRequest($method, $params);
         return $this->trans->request($req);
     }
 
+    /**
+     * @param string $method
+     * @param array  $params
+     * @return array
+     */
     public function createRequest($method, $params) {
         $req = array("jsonrpc" => "2.0", "id" => uniqid("", true), "method" => $method);
         if ($params && is_array($params) && count($params) > 0) {

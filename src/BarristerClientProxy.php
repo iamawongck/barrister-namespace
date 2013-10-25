@@ -2,25 +2,36 @@
 
 namespace Barrister;
 
+use Barrister\BarristerClientInterface;
 use Barrister\Exception\BarristerRpcException;
 
 class BarristerClientProxy {
     /**
-     * @param BarristerClient $client
-     * @param string          $interfaceName
+     * @var \Barrister\BarristerClientInterface
      */
-    function __construct($client, $interfaceName) {
+    public $client;
+
+    /**
+     * @var string
+     */
+    public $interfaceName;
+
+    /**
+     * @param BarristerClientInterface $client
+     * @param string                   $interfaceName
+     */
+    public function __construct(BarristerClientInterface $client, $interfaceName) {
         $this->client        = $client;
         $this->interfaceName = $interfaceName;
     }
 
     /**
-     * @param $name
-     * @param $args
+     * @param string $name
+     * @param array  $args
      * @return mixed
      * @throws Exception\BarristerRpcException
      */
-    function __call($name, $args) {
+    public function __call($name, $args) {
         $method = $this->interfaceName . "." . $name;
         $resp   = $this->client->request($method, $args);
         if (isset($resp->error)) {

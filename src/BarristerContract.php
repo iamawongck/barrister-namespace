@@ -26,7 +26,7 @@ class BarristerContract {
     public $meta;
 
     /**
-     * @param $idl
+     * @param \stdClass $idl json_decoded idl file
      */
     public function __construct($idl) {
         $this->idl        = $idl;
@@ -82,6 +82,13 @@ class BarristerContract {
         }
     }
 
+    /**
+     * @param string          $name
+     * @param \stdClass       $expected json_decoded object that consists of 'optional', 'type'
+     * @param bool            $isArray
+     * @param string|int|bool $val
+     * @return null|string
+     */
     public function validate($name, $expected, $isArray, $val) {
         if ($val === null) {
             if ($expected->optional === true) {
@@ -200,7 +207,7 @@ class BarristerContract {
         }
     }
 
-    public function getAllStructFields($arr, $struct) {
+    private function getAllStructFields($arr, $struct) {
         foreach ($struct->fields as $i => $f) {
             array_push($arr, $f);
         }
@@ -215,7 +222,7 @@ class BarristerContract {
         return $arr;
     }
 
-    public function typeErr($name, $expType, $val) {
+    private function typeErr($name, $expType, $val) {
         $actual = gettype($val);
         $s      = "$name expects type '$expType' but got type '$actual'";
         if ($actual !== "object") {

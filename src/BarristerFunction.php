@@ -3,6 +3,9 @@
 namespace Barrister;
 
 class BarristerFunction {
+    /**
+     * @param \stdClass $func
+     */
     public function __construct($func) {
         $this->returns = $func->returns;
         $this->params  = $func->params;

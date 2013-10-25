@@ -2,6 +2,7 @@
 
 namespace Barrister;
 
+use Barrister\BarristerClient;
 use Barrister\Transport\BarristerHttpTransport;
 
 class Barrister {

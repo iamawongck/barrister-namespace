@@ -9,7 +9,7 @@ class BarristerInterface {
     private $functions;
 
     /**
-     * @param $iface
+     * @param \stdClass $iface json_decoded object
      */
     public function __construct($iface) {
         $this->functions = array();

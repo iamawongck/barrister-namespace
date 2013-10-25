@@ -149,56 +149,60 @@ class BarristerContract {
                 }
             }
             else {
-                $enum = $this->enums[$expected->type];
-                if ($enum) {
-                    if (!is_string($val)) {
-                        return "$name - enum values must be strings, got: " . gettype($val);
-                    }
-
-                    $len = count($enum->values);
-                    for ($i = 0; $i < $len; $i++) {
-                        if ($enum->values[$i]->value === $val) {
-                            return null;
+                if (isset($this->enums[$expected->type])) {
+                    $enum = $this->enums[$expected->type];
+                    if ($enum) {
+                        if (!is_string($val)) {
+                            return "$name - enum values must be strings, got: " . gettype($val);
                         }
-                    }
 
-                    return "$name value '$val' is not in the enum '" . $enum->name . "'";
+                        $len = count($enum->values);
+                        for ($i = 0; $i < $len; $i++) {
+                            if ($enum->values[$i]->value === $val) {
+                                return null;
+                            }
+                        }
+
+                        return "$name value '$val' is not in the enum '" . $enum->name . "'";
+                    }
                 }
 
-                $struct = $this->structs[$expected->type];
-                if ($struct) {
-                    if (is_array($val) || is_object($val)) {
-                        $fields = $this->getAllStructFields(array(), $struct);
-                        $vars   = $val;
-                        if (is_object($val)) {
-                            $vars = get_object_vars($val);
-                        }
+                if (isset($this->structs[$expected->type])) {
+                    $struct = $this->structs[$expected->type];
+                    if ($struct) {
+                        if (is_array($val) || is_object($val)) {
+                            $fields = $this->getAllStructFields(array(), $struct);
+                            $vars   = $val;
+                            if (is_object($val)) {
+                                $vars = get_object_vars($val);
+                            }
 
-                        $validFields = array();
-                        foreach ($fields as $i => $f) {
-                            if (array_key_exists($f->name, $vars)) {
-                                $invalid = $this->validate($name . "." . $f->name, $f, $f->is_array, $vars[$f->name]);
-                                if ($invalid !== null) {
-                                    return $invalid;
+                            $validFields = array();
+                            foreach ($fields as $i => $f) {
+                                if (array_key_exists($f->name, $vars)) {
+                                    $invalid = $this->validate($name . "." . $f->name, $f, $f->is_array, $vars[$f->name]);
+                                    if ($invalid !== null) {
+                                        return $invalid;
+                                    }
+                                }
+                                else if (!$f->optional) {
+                                    return "$name missing required field '" . $f->name . "'";
+                                }
+
+                                $validFields[$f->name] = 1;
+                            }
+
+                            foreach ($vars as $k => $v) {
+                                if (!array_key_exists($k, $validFields)) {
+                                    return "$name contains invalid field '$k' for type '" . $f->name . "'";
                                 }
                             }
-                            else if (!$f->optional) {
-                                return "$name missing required field '" . $f->name . "'";
-                            }
 
-                            $validFields[$f->name] = 1;
+                            return null;
                         }
-
-                        foreach ($vars as $k => $v) {
-                            if (!array_key_exists($k, $validFields)) {
-                                return "$name contains invalid field '$k' for type '" . $f->name . "'";
-                            }
+                        else {
+                            return $this->typeErr($name, $expected->type, $val);
                         }
-
-                        return null;
-                    }
-                    else {
-                        return $this->typeErr($name, $expected->type, $val);
                     }
                 }
 

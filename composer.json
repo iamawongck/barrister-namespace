@@ -1,6 +1,6 @@
 {
     "name": "iamawongck/barrister-namespace",
     "autoload": {
-        "psr-0": {"Barrister": ["src/"]}
+        "psr-0": {"Barrister": ["/"]}
     }
 }

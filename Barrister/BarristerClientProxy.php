@@ -10,19 +10,25 @@ class BarristerClientProxy {
      * @var \Barrister\BarristerClientInterface
      */
     public $client;
-
     /**
      * @var string
      */
     public $interfaceName;
 
     /**
+     * @var string
+     */
+    public $fullyQualifiedNamespace;
+
+    /**
      * @param BarristerClientInterface $client
+     * @param string                   $fullyQualifiedNamespace
      * @param string                   $interfaceName
      */
-    public function __construct(BarristerClientInterface $client, $interfaceName) {
-        $this->client        = $client;
-        $this->interfaceName = $interfaceName;
+    public function __construct(BarristerClientInterface $client, $fullyQualifiedNamespace, $interfaceName) {
+        $this->client                  = $client;
+        $this->fullyQualifiedNamespace = $fullyQualifiedNamespace;
+        $this->interfaceName           = $interfaceName;
     }
 
     /**
@@ -32,7 +38,7 @@ class BarristerClientProxy {
      * @throws Exception\BarristerRpcException
      */
     public function __call($name, $args) {
-        $method = $this->interfaceName . "." . $name;
+        $method = $this->fullyQualifiedNamespace . "." . $this->interfaceName . "." . $name;
         $resp   = $this->client->request($method, $args);
         if (isset($resp->error)) {
             throw new BarristerRpcException($resp->error->code,

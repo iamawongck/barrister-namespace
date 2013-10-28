@@ -40,12 +40,13 @@ class BarristerBatch implements BarristerClientInterface {
     }
 
     /**
+     * @param string $fullyQualifiedNamespace
      * @param string $interfaceName
      * @return BarristerClientProxy
      */
-    public function proxy($interfaceName) {
+    public function proxy($fullyQualifiedNamespace, $interfaceName) {
         $this->client->contract->checkInterface($interfaceName);
-        return new BarristerClientProxy($this, $interfaceName);
+        return new BarristerClientProxy($this, $fullyQualifiedNamespace, $interfaceName);
     }
 
     /**

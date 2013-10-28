@@ -29,12 +29,13 @@ class BarristerClient implements BarristerClientInterface {
     }
 
     /**
-     * @param $interfaceName
+     * @param string $fullyQualifiedNamespace
+     * @param string $interfaceName
      * @return BarristerClientProxy
      */
-    public function proxy($interfaceName) {
+    public function proxy($fullyQualifiedNamespace, $interfaceName) {
         $this->contract->checkInterface($interfaceName);
-        return new BarristerClientProxy($this, $interfaceName);
+        return new BarristerClientProxy($this, $fullyQualifiedNamespace, $interfaceName);
     }
 
     /**

@@ -21,10 +21,11 @@ class BarristerClient implements BarristerClientInterface {
 
     /**
      * @param BarristerTransport $trans
+     * @param BarristerContract  $contract
      */
-    public function __construct(BarristerTransport $trans) {
+    public function __construct(BarristerTransport $trans, BarristerContract $contract) {
         $this->trans = $trans;
-        $this->loadContract();
+        $this->contract = $contract;
     }
 
     /**
@@ -41,12 +42,6 @@ class BarristerClient implements BarristerClientInterface {
      */
     public function getMeta() {
         return $this->contract->getMeta();
-    }
-
-    public function loadContract() {
-        $req            = array("jsonrpc" => "2.0", "id" => "1", "method" => "barrister-idl");
-        $resp           = $this->trans->request($req);
-        $this->contract = new BarristerContract($resp->result);
     }
 
     /**

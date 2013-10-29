@@ -16,14 +16,6 @@ class Error implements Response {
         $this->request = $request;
     }
 
-    public function setCode($code) {
-        $this->code = $code;
-    }
-
-    public function setMessage($message) {
-        $this->message = $message;
-    }
-
     public function setData($data) {
         $this->data = $data;
     }
@@ -38,6 +30,14 @@ class Error implements Response {
             $resp["id"] = $this->request->getId();
         }
         return $resp;
+    }
+
+    protected function setCode($code) {
+        $this->code = $code;
+    }
+
+    protected function setMessage($message) {
+        $this->message = $message;
     }
 
 }

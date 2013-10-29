@@ -4,6 +4,7 @@ namespace Barrister\Handler;
 use Barrister\Handler;
 use Barrister\BarristerContract;
 use Barrister\Request;
+use Barrister\Request\NamespacedRequest;
 use Barrister\Exception\RequestException;
 
 class NamespacedHandler implements Handler {
@@ -16,7 +17,7 @@ class NamespacedHandler implements Handler {
     }
 
     public function handle(Request $request) {
-        if (!$request instanceof \Barrister\NamespacedRequest) {
+        if (!$request instanceof NamespacedRequest) {
             throw new RequestException();
         }
 

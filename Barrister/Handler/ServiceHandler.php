@@ -1,5 +1,5 @@
 <?
-namespace Barrister\Handler\Namespaced;
+namespace Barrister\Handler;
 
 use Barrister\Handler;
 use Barrister\BarristerContract;
@@ -7,7 +7,7 @@ use Barrister\Request;
 use Barrister\Request\NamespacedRequest;
 use Barrister\Exception\RequestException;
 
-class NamespacedHandler implements Handler {
+class ServiceHandler implements Handler {
 
     /** @var BarristerContract */
     private $contract;

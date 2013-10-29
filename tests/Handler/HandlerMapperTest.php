@@ -18,7 +18,7 @@ class HandlerMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \Barrister\Exception\WrongRequestType
+     * @expectedException \Barrister\Exception\WrongRequestTypeException
      */
     public function testHandleNotNamespacedRequest() {
         $this->mapper->handle(new \Barrister\Request\NullRequest());

@@ -3,7 +3,7 @@
 namespace Barrister\Handler;
 
 use Barrister\Exception\RequestException;
-use Barrister\Exception\WrongRequestType;
+use Barrister\Exception\WrongRequestTypeException;
 use Barrister\Handler;
 use Barrister\Request;
 use Barrister\Response;
@@ -31,11 +31,11 @@ class HandlerMapper implements Handler {
      * @param Request $request
      * @return Response
      * @throws \Barrister\Exception\RequestException
-     * @throws \Barrister\Exception\WrongRequestType
+     * @throws \Barrister\Exception\WrongRequestTypeException
      */
     public function handle(Request $request) {
         if (!($request instanceof Request\KeyedRequest)) {
-            throw new WrongRequestType("Request should be an instance of a KeyedRequest");
+            throw new WrongRequestTypeException("Request should be an instance of a KeyedRequest");
         }
 
         $namespaceKey = $request->getKey();

@@ -2,7 +2,7 @@
 
 namespace Barrister\Exception;
 
-class WrongRequestType extends \Exception {
+class WrongRequestTypeException extends \Exception {
 
     const MESSAGE = 'Mismatched request type caught by request handler.';
 

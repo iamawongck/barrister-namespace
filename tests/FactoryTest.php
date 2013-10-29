@@ -40,10 +40,4 @@ class FactoryTest extends PHPUnit_Framework_TestCase {
         return new \Barrister\Contract(vfsStream::url(self::DIR . DIRECTORY_SEPARATOR . self::FILENAME), $jsonDecoder);
     }
 
-    public function testMakeService() {
-        $contract = $this->getContract(self::IDL_JSON);
-        $service = \Barrister\Factory::makeService($contract, self::INTERFACE_NAME, self::NAMESPACE_NAME);
-
-        $this->assertInstanceOf('\Barrister\Service', $service);
-    }
 }

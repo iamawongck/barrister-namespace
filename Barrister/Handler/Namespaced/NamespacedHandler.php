@@ -1,5 +1,5 @@
 <?
-namespace Barrister\Handler;
+namespace Barrister\Handler\Namespaced;
 
 use Barrister\Handler;
 use Barrister\BarristerContract;

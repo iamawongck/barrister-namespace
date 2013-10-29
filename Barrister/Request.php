@@ -10,4 +10,6 @@ interface Request {
     public function hasId();
 
     public function getId();
+    
+    public function toJSON();
 }

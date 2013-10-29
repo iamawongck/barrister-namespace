@@ -2,6 +2,12 @@
 
 namespace Barrister;
 
+use Barrister\Request\AbstractRequest;
+
 interface BarristerTransport {
-    public function request($req);
+    /**
+     * @param AbstractRequest $request
+     * @return mixed
+     */
+    public function request(AbstractRequest $request);
 }

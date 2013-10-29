@@ -5,6 +5,7 @@ namespace Barrister\Transport;
 use Barrister\BarristerJsonDecoder;
 use Barrister\BarristerTransport;
 use Barrister\Exception\BarristerRpcException;
+use Barrister\Request\AbstractRequest;
 
 class BarristerHttpTransport implements BarristerTransport {
     /**
@@ -27,12 +28,12 @@ class BarristerHttpTransport implements BarristerTransport {
     }
 
     /**
-     * @param $req
-     * @return mixed
+     * @param AbstractRequest $request
+     * @return mixed|null
      * @throws \Barrister\Exception\BarristerRpcException
      */
-    public function request($req) {
-        $post_data = json_encode($req);
+    public function request(AbstractRequest $request) {
+        $post_data = $request->toJSON();
         //print "request: $post_data\n";
         $headers = array('Content-Type: application/json', 'Content-Length: ' . strlen($post_data));
         $ch      = curl_init($this->url);

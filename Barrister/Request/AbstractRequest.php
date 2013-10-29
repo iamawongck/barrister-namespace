@@ -4,6 +4,10 @@ namespace Barrister\Request;
 use Barrister\Request;
 
 abstract class AbstractRequest implements Request {
+    const JSON_RPC = "jsonrpc";
+    const ID       = "id";
+    const METHOD   = "method";
+    const PARAMS   = "params";
 
     private $id;
     private $method;
@@ -26,11 +30,21 @@ abstract class AbstractRequest implements Request {
         return isset($this->id);
     }
 
+    public function getId() {
+        return $this->id;
+    }
+
     public function setId($id) {
         $this->id = $id;
     }
 
-    public function getId() {
-        return $this->id;
+    public function toJSON() {
+        return json_encode(
+            array(
+                self::JSON_RPC => "2.0",
+                self::ID       => $this->hasId() ? $this->getId() : uniqid("", true),
+                self::METHOD   => $this->getMethod(),
+                self::PARAMS   => $this->getParams()
+            ));
     }
 }

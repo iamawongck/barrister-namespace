@@ -8,7 +8,7 @@ interface BarristerClientInterface {
      * @param array  $params
      * @return mixed
      */
-    public function request($method, $params);
+    public function request($method, array $params);
 
     /**
      * @param string $fullyQualifiedNamespace

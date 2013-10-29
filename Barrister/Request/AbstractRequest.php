@@ -13,7 +13,11 @@ abstract class AbstractRequest implements Request {
     private $method;
     private $params;
 
-    public function __construct($method, $params) {
+    /**
+     * @param string $method
+     * @param array  $params
+     */
+    public function __construct($method, array $params) {
         $this->method = $method;
         $this->params = $params;
     }

@@ -1,6 +1,8 @@
 <?
 namespace Barrister;
 
+use Barrister\Exception\Service\InvalidInterfaceException;
+
 class Contract {
 
     private $interfaces;
@@ -45,6 +47,18 @@ class Contract {
                 }
             }
         }
+    }
+
+    /**
+     * @param string $name
+     * @throws InvalidInterfaceException
+     * @return BarristerInterface
+     */
+    public function getInterface($name) {
+        if (!$this->validateInterface($name)) {
+            throw new InvalidInterfaceException($name);
+        }
+        return $this->interfaces[$name];
     }
 
     public function validateInterface($name) {

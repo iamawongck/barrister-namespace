@@ -12,6 +12,9 @@ class FactoryTest extends PHPUnit_Framework_TestCase {
 
     const INVALID_JSON = 'a[]';
 
+    const INTERFACE_NAME = 'Service';
+    const NAMESPACE_NAME = 'CreditKarma/Test';
+
     public function testMakeContract() {
         $contract = $this->getContract(self::IDL_JSON);
         $this->assertInstanceOf('\Barrister\Contract', $contract);
@@ -35,5 +38,12 @@ class FactoryTest extends PHPUnit_Framework_TestCase {
         $jsonDecoder = new \Barrister\BarristerJsonDecoder();
 
         return new \Barrister\Contract(vfsStream::url(self::DIR . DIRECTORY_SEPARATOR . self::FILENAME), $jsonDecoder);
+    }
+
+    public function testMakeService() {
+        $contract = $this->getContract(self::IDL_JSON);
+        $service = \Barrister\Factory::makeService($contract, self::INTERFACE_NAME, self::NAMESPACE_NAME);
+
+        $this->assertInstanceOf('\Barrister\Service', $service);
     }
 }

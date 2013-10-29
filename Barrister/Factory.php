@@ -2,6 +2,9 @@
 namespace Barrister;
 
 use Barrister\Contract;
+use Barrister\Service;
+use Barrister\Service\NullService;
+use Barrister\Exception\Service\InvalidInterfaceException;
 
 class Factory {
 
@@ -17,12 +20,22 @@ class Factory {
 
     /**
      * @param Contract $contract
-     * @param $name
-     * @param $namespace
-     * @return mixed
+     * @param string $name
+     * @param string $namespace
+     * @throws InvalidInterfaceException
+     * @return Service
      */
     static public function makeService(Contract $contract, $name, $namespace) {
-        $service = new \stdClass;
+        $service = new NullService();
+
+        try {
+            $interface = $contract->getInterface($name);
+        } catch (InvalidInterfaceException $e) {
+            throw $e;
+        }
+
+
+
         return $service;
     }
 }

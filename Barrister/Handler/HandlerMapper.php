@@ -28,12 +28,12 @@ class HandlerMapper implements Handler {
     }
 
     /**
-     * @param Request $request
-     * @return Response
+     * @param Request\AbstractRequest $request
+     * @return mixed
      * @throws \Barrister\Exception\RequestException
      * @throws \Barrister\Exception\WrongRequestType
      */
-    public function handle(Request $request) {
+    public function handle(Request\AbstractRequest $request) {
         if (!($request instanceof Request\KeyedRequest)) {
             throw new WrongRequestType("Request should be an instance of a KeyedRequest");
         }

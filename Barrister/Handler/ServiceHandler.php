@@ -35,22 +35,15 @@ class ServiceHandler implements Handler {
      * @throws \Barrister\Exception\RequestException
      */
     public function handle(Request\AbstractRequest $request) {
-        if (!$this->validateRequest($request)) {
-            $this->errorResponse($request);
-        }
+        $this->validateRequest($request);
 
+        $paramObjects = $this->makeParams($request->getParams());
 
-        if (!$request instanceof NamespacedRequest) {
-            throw new RequestException();
-        }
+        $result = $this->callFunction($request->getFunction(), $paramObjects);
 
-        if (!$request->isValid()) {
-            $response = $this->errorResponse($request);
-        }
-        else {
-            $response = $this->okResponse($request);
-        }
-        return $response;
+        $this->validateResult($result);
+
+        return $this->makeSuccessResponse($result);
     }
 
     private function okResponse(Request $request) {
@@ -62,10 +55,35 @@ class ServiceHandler implements Handler {
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @param Request\AbstractRequest $request
+     * @throws \Barrister\Exception\RequestException
      */
-    private function validateRequest(Request $request) {
-        $this->contract->validateInterface($request->getInterface());
+    private function validateRequest(Request\AbstractRequest $request) {
+        if (!$this->contract->validateInterface($request->getInterface())) {
+            throw new RequestException("Request does fulfill the contract's interface name");
+        }
+
+        foreach ($request->getParams() as $param) {
+            if (!$this->contract->validateStruct($param->type)) {
+                throw new RequestException("Request does fulfill the contract's struct name");
+            }
+        }
+    }
+
+
+    private function makeParams(array $params) {
+
+    }
+
+    private function callFunction($function, $functionArgumentObjects) {
+
+    }
+
+    private function validateResult($result) {
+
+    }
+
+    private function makeSuccessResponse($result) {
+
     }
 }

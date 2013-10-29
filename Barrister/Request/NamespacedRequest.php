@@ -3,12 +3,11 @@ namespace Barrister\Request;
 
 use Barrister\Request\AbstractRequest;
 
-class NamespacedRequest extends AbstractRequest {
+class NamespacedRequest extends AbstractRequest implements KeyedRequest {
 
     const FULLY_QUALIFIED_NAMESPACE = "namespace_name";
     const INTERFACE_NAME            = "interface_name";
     const FUNCTION_NAME             = "function_name";
-
     private $namespace;
     private $interface;
     private $function;
@@ -34,19 +33,26 @@ class NamespacedRequest extends AbstractRequest {
         return $this->namespace;
     }
 
+    /**
+     * @return string
+     */
+    public function getKey() {
+        return $this->getNamespace();
+    }
+
     private function initMethod() {
         $method = $this->getMethod();
-        $pos = strpos($method, '.');
+        $pos    = strpos($method, '.');
 
         if ($pos > 0) {
             $this->namespace = substr($method, 0, $pos);
-            $method = substr($method, $pos + 1);
+            $method          = substr($method, $pos + 1);
 
             $pos = strpos($method, '.');
 
             if ($pos > 0) {
                 $this->interface = substr($method, 0, $pos);
-                $this->function = substr($method, $pos + 1);
+                $this->function  = substr($method, $pos + 1);
             }
         }
     }

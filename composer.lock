@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b138f9fe66dac2ae7b38ebce8cab9d39",
+    "hash": "7b96c53f1a9f0759b5138ac17ecf9c5e",
     "packages": [
         {
             "name": "doctrine/common",
@@ -73,7 +73,9 @@
                 "spl"
             ],
             "time": "2012-09-20 05:55:18"
-        },
+        }
+    ],
+    "packages-dev": [
         {
             "name": "mikey179/vfsStream",
             "version": "v1.2.0",
@@ -104,9 +106,6 @@
             "homepage": "http://vfs.bovigo.org/",
             "time": "2013-04-01 10:41:02"
         }
-    ],
-    "packages-dev": [
-
     ],
     "aliases": [
 

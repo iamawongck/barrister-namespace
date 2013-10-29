@@ -4,7 +4,9 @@
         "psr-0": {"Barrister": ""}
     },
     "require": {
-        "mikey179/vfsStream": ">=1.2.0",
         "doctrine/common": "2.3.0"
+    },
+    "require-dev": {
+        "mikey179/vfsStream": ">=1.2.0"
     }
 }

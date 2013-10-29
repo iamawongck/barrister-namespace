@@ -55,7 +55,7 @@ class BarristerBatch implements BarristerClientInterface {
      * @return mixed|void
      * @throws \Exception
      */
-    public function request($method, $params) {
+    public function request($method, array $params) {
         if ($this->sent) {
             throw new \Exception("Batch has already been sent!");
         }

@@ -1,7 +1,7 @@
 <?php
 
 
-class NamespacedHandlerMapperTest extends PHPUnit_Framework_TestCase {
+class HandlerMapperTest extends PHPUnit_Framework_TestCase {
     const NAMESPACEING = "Namespace";
 
     const METHODING = "Method";
@@ -9,12 +9,12 @@ class NamespacedHandlerMapperTest extends PHPUnit_Framework_TestCase {
     const IFACE = "Iface";
 
     /**
-     * @var \Barrister\Handler\Namespaced\NamespacedHandlerMapper
+     * @var \Barrister\Handler\HandlerMapper
      */
     private $mapper;
 
     protected function setUp() {
-        $this->mapper = new \Barrister\Handler\Namespaced\NamespacedHandlerMapper();
+        $this->mapper = new \Barrister\Handler\HandlerMapper();
     }
 
     /**

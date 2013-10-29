@@ -1,6 +1,6 @@
 <?php
 
-namespace Barrister\Handler\Namespaced;
+namespace Barrister\Handler;
 
 use Barrister\Exception\RequestException;
 use Barrister\Exception\WrongRequestType;
@@ -9,7 +9,7 @@ use Barrister\Request;
 use Barrister\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class NamespacedHandlerMapper implements Handler {
+class HandlerMapper implements Handler {
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
@@ -34,11 +34,11 @@ class NamespacedHandlerMapper implements Handler {
      * @throws \Barrister\Exception\WrongRequestType
      */
     public function handle(Request $request) {
-        if (!($request instanceof Request\NamespacedRequest)) {
-            throw new WrongRequestType("Request should be an instance of a NamespacedRequest");
+        if (!($request instanceof Request\KeyedRequest)) {
+            throw new WrongRequestType("Request should be an instance of a KeyedRequest");
         }
 
-        $namespaceKey = $request->getNamespace();
+        $namespaceKey = $request->getKey();
 
         if (!$this->handlers->containsKey($namespaceKey)) {
             throw new RequestException("There is no handler mapped to this key: $namespaceKey.");

@@ -1,5 +1,5 @@
 <?
-namespace Barrister;
+namespace Barrister\Request;
 
 use Barrister\Request\AbstractRequest;
 

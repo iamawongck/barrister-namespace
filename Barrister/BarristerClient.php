@@ -7,7 +7,7 @@ use Barrister\BarristerContract;
 use Barrister\BarristerTransport;
 use Barrister\BarristerBatch;
 use Barrister\BarristerClientInterface;
-use Barrister\Request\Factory;
+use Barrister\Request\RequestFactory;
 
 class BarristerClient implements BarristerClientInterface {
     /**
@@ -59,7 +59,7 @@ class BarristerClient implements BarristerClientInterface {
      * @return mixed
      */
     public function request($method, array $params) {
-        $request = Factory::makeNamespacedRequest($method, $params);
+        $request = RequestFactory::makeNamespacedRequest($method, $params);
         return $this->trans->request($request);
     }
 

@@ -2,7 +2,7 @@
 
 namespace Barrister\Request;
 
-class Factory {
+class RequestFactory {
     /**
      * @param string $method
      * @param array  $params

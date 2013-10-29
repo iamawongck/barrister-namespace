@@ -1,6 +1,8 @@
 <?
 namespace Barrister;
 
+use Barrister\Contract;
+
 class Factory {
 
     /**
@@ -14,12 +16,12 @@ class Factory {
     }
 
     /**
-     * @param BarristerContract $contract
+     * @param Contract $contract
      * @param $name
      * @param $namespace
      * @return mixed
      */
-    static public function makeService(BarristerContract $contract, $name, $namespace) {
+    static public function makeService(Contract $contract, $name, $namespace) {
         $service = new \stdClass;
         return $service;
     }

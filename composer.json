@@ -2,5 +2,8 @@
     "name": "iamawongck/barrister-namespace",
     "autoload": {
         "psr-0": {"Barrister": ""}
+    },
+    "require": {
+        "doctrine/common": "2.3.0"
     }
 }

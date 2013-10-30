@@ -24,7 +24,7 @@ class ServerTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testHandle() {
-        $request = $this->getMockForAbstractClass('\Barrister\Request');
+        $request = $this->getMockForAbstractClass('\Barrister\Request\AbstractRequest', array(), '', false);
 
         $this->server->expects($this->once())
             ->method("makeRequestFromJSON")

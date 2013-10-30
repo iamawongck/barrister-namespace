@@ -11,4 +11,16 @@ class NullRequest extends AbstractRequest {
     public function isValid() {
         return true;
     }
+
+    /** @return string */
+    public function getInterface() {
+        return '';
+    }
+
+    /** @return string */
+    public function getFunction() {
+        return '';
+    }
+
+
 }

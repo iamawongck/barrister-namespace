@@ -1,11 +1,13 @@
 <?
 namespace Barrister;
 
+use Barrister\Request\AbstractRequest;
+
 interface Handler {
 
     /**
-     * @param Request $request
-     * @return Response
+     * @param AbstractRequest $request
+     * @return mixed
      */
-    public function handle(Request $request);
+    public function handle(AbstractRequest $request);
 }

@@ -5,9 +5,8 @@ namespace Barrister;
 use Barrister\Exception\BarristerRpcException;
 
 class BarristerServer {
-    const FULLY_QUALIFIED_NAMESPACE = "namespace_name";
-    const INTERFACE_NAME            = "interface_name";
-    const FUNCTION_NAME             = "function_name";
+    const INTERFACE_NAME = "interface_name";
+    const FUNCTION_NAME  = "function_name";
 
     /**
      * @var BarristerContract
@@ -115,7 +114,6 @@ class BarristerServer {
             return $this->errResp($req, -32600, $deconstructedMethodSignature->getMessage());
         }
         else {
-            $fullNamespace = $deconstructedMethodSignature[self::FULLY_QUALIFIED_NAMESPACE];
             $iface         = $deconstructedMethodSignature[self::INTERFACE_NAME];
             $func          = $deconstructedMethodSignature[self::FUNCTION_NAME];
         }
@@ -207,31 +205,20 @@ class BarristerServer {
      * @return array
      */
     private function deconstructMethodString($method) {
-        $pos = strpos($method, '.');
-
         try {
+            $pos = strpos($method, '.');
+
             if ($pos > 0) {
-                $fullyQualifiedNamespace = substr($method, 0, $pos);
-                $method                  = substr($method, $pos + 1);
+                $interface = substr($method, 0, $pos);
+                $func  = substr($method, $pos + 1);
 
-                $pos = strpos($method, '.');
-
-                if ($pos > 0) {
-                    $interface = substr($method, 0, $pos);
-                    $func  = substr($method, $pos + 1);
-
-                    return array(
-                        self::FULLY_QUALIFIED_NAMESPACE => $fullyQualifiedNamespace,
-                        self::INTERFACE_NAME            => $interface,
-                        self::FUNCTION_NAME             => $func
-                    );
-                }
-                else {
-                    throw new \Exception("Invalid request method when trying to get interface and function: $method");
-                }
+                return array(
+                    self::INTERFACE_NAME => $interface,
+                    self::FUNCTION_NAME  => $func
+                );
             }
             else {
-                throw new \Exception("Invalid request method when trying to get fully qualified namespace: $method");
+                throw new \Exception("Invalid request method when trying to get interface and function: $method");
             }
         } catch (\Exception $ex) {
             return $ex;

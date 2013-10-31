@@ -11,9 +11,8 @@ interface BarristerClientInterface {
     public function request($method, $params);
 
     /**
-     * @param string $fullyQualifiedNamespace
      * @param string $interfaceName
      * @return BarristerClientProxy
      */
-    public function proxy($fullyQualifiedNamespace, $interfaceName);
+    public function proxy($interfaceName);
 }

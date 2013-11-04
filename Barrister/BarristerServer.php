@@ -173,9 +173,6 @@ class BarristerServer {
         catch (BarristerRpcException $e) {
             return $this->errResp($req, $e->getCode(), $e->getMessage(), $e->getData());
         }
-        catch (\Exception $e) {
-            return $this->errResp($req, -32000, "Unknown error: " . $e->getMessage());
-        }
     }
 
     public function okResp($req, $result) {

@@ -3,6 +3,10 @@
 namespace Barrister;
 
 use Barrister\Exception\BarristerRpcException;
+use Barrister\Exception\IncompatibleIDLException;
+use Barrister\Exception\IncompleteRequestException;
+use Barrister\Exception\InvalidRequestParamsException;
+use Barrister\Exception\InvalidResultsException;
 
 class BarristerServer {
     const INTERFACE_NAME = "interface_name";
@@ -102,7 +106,7 @@ class BarristerServer {
     public function handleSingle($req) {
         $method = $req->method;
         if (!$method) {
-            return $this->errResp($req, -32600, "No method specified on request");
+            throw new IncompleteRequestException();
         }
 
         if ($method === "barrister-idl") {
@@ -110,21 +114,17 @@ class BarristerServer {
         }
 
         $deconstructedMethodSignature = $this->deconstructMethodString($method);
-        if ($deconstructedMethodSignature instanceof \Exception) {
-            return $this->errResp($req, -32600, $deconstructedMethodSignature->getMessage());
-        }
-        else {
-            $iface         = $deconstructedMethodSignature[self::INTERFACE_NAME];
-            $func          = $deconstructedMethodSignature[self::FUNCTION_NAME];
-        }
 
-        $ifaceInst = $this->contract->getInterface($iface);
+        $requestInterface = $deconstructedMethodSignature[self::INTERFACE_NAME];
+        $requestFunction  = $deconstructedMethodSignature[self::FUNCTION_NAME];
+
+        $ifaceInst = $this->contract->getInterface($requestInterface);
         $funcInst  = null;
         if ($ifaceInst) {
-            $funcInst = $ifaceInst->getFunction($func);
+            $funcInst = $ifaceInst->getFunction($requestFunction);
         }
         if (!$ifaceInst || !$funcInst) {
-            return $this->errResp($req, -32601, "Method not found on IDL: $method");
+            throw new IncompatibleIDLException("Method not found on IDL: $method");
         }
 
         $params = $req->params;
@@ -134,44 +134,40 @@ class BarristerServer {
 
         $invalid = $funcInst->validateParams($this->contract, $params);
         if ($invalid !== null) {
-            return $this->errResp($req, -32602, $invalid);
+            throw new InvalidRequestParamsException($invalid);
         }
 
-        $handler = $this->handlers[$iface];
+        $handler = $this->handlers[$requestInterface];
         if (!$handler) {
-            return $this->errResp($req, -32601, "Interface not found: $iface");
+            throw new IncompatibleIDLException("Interface not found: $requestInterface");
         }
 
         $reflectMethod = null;
         try {
-            $reflectMethod = new \ReflectionMethod(get_class($handler), $func);
+            $reflectMethod = new \ReflectionMethod(get_class($handler), $requestFunction);
         }
         catch (\Exception $e) { }
 
         if (!$reflectMethod) {
             try {
-                $reflectMethod = new \ReflectionMethod(get_class($handler), $func . "_");
+                $reflectMethod = new \ReflectionMethod(get_class($handler), $requestFunction . "_");
             }
             catch (\Exception $e) { }
         }
 
         if (!$reflectMethod) {
-            return $this->errResp($req, -32601, "Method not found: $method");
+            throw new IncompatibleIDLException("Method not found: $method");
         }
 
-        try {
-            $result = $reflectMethod->invokeArgs($handler, $params);
 
-            $invalid = $funcInst->validateResult($this->contract, $result);
-            if ($invalid !== null) {
-                return $this->errResp($req, -32001, $invalid);
-            }
-            else {
-                return $this->okResp($req, $result);
-            }
+        $result = $reflectMethod->invokeArgs($handler, $params);
+
+        $invalid = $funcInst->validateResult($this->contract, $result);
+        if ($invalid !== null) {
+            throw new InvalidResultsException($invalid);
         }
-        catch (BarristerRpcException $e) {
-            return $this->errResp($req, $e->getCode(), $e->getMessage(), $e->getData());
+        else {
+            return $this->okResp($req, $result);
         }
     }
 
@@ -196,29 +192,24 @@ class BarristerServer {
     }
 
     /**
-     * Deconstruct a method string into a fully qualified namespace, interface, and function strings
-     *
      * @param $method
      * @return array
+     * @throws Exception\IncompleteRequestException
      */
     private function deconstructMethodString($method) {
-        try {
-            $pos = strpos($method, '.');
+        $pos = strpos($method, '.');
 
-            if ($pos > 0) {
-                $interface = substr($method, 0, $pos);
-                $func  = substr($method, $pos + 1);
+        if ($pos > 0) {
+            $interface = substr($method, 0, $pos);
+            $func  = substr($method, $pos + 1);
 
-                return array(
-                    self::INTERFACE_NAME => $interface,
-                    self::FUNCTION_NAME  => $func
-                );
-            }
-            else {
-                throw new \Exception("Invalid request method when trying to get interface and function: $method");
-            }
-        } catch (\Exception $ex) {
-            return $ex;
+            return array(
+                self::INTERFACE_NAME => $interface,
+                self::FUNCTION_NAME  => $func
+            );
+        }
+        else {
+            throw new IncompleteRequestException("Invalid request method when trying to get interface and function: $method");
         }
     }
 }
